@@ -16,6 +16,12 @@ db.one("SELECT 1 as value")
     console.log("error ", err.message);
   });
 
+  // Define required Routes
+const logsRoutes = require("./routes/logs")
+
+// Integrate routes
+app.use("/api/logs", logsRoutes)
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
