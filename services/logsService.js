@@ -2,7 +2,15 @@
 const db = require("../database/db");
 
 exports.getLogs = async () => {
-  const result = await db.query(`SELECT * FROM windows_logs`);
+  try {
+    // Try to get all logs from the database
+    const result = await db.query(`SELECT * FROM windows_logs`);
+    return result.rows;
 
-  return result.rows;
+  } catch (error) {
+    console.error("Fehler beim Abrufen der Logs:", error);
+
+    // Return Error
+    throw new Error("Logs konnten nicht geladen werden");
+  }
 };
