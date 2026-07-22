@@ -4,9 +4,10 @@ const jwt = require("jsonwebtoken");
 
 exports.login = async (username, password) => {
   // Search user in databse
-  const result = await db.query("SELECT * FROM admin_acc WHERE username = $1", [
-    username,
-  ]);
+  const result = await db.query(
+    "SELECT * FROM monitoring_users WHERE username = $1",
+    [username],
+  );
 
   const user = result.rows[0];
 
