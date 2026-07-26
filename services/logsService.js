@@ -15,8 +15,9 @@ exports.getLogs = async () => {
 };
 
 exports.postLogs = async (data) => {
-  const result = await db.query(
-    `
+  try {
+    const result = await db.query(
+      `
     INSERT INTO windows_logs
     (
     client_id,
@@ -30,20 +31,23 @@ exports.postLogs = async (data) => {
     message
     )
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    RETURNING *
     `,
-    [
-      data.client_id,
-      data.hostname,
-      data.time_created,
-      data.level,
-      data.source,
-      data.eventSource,
-      data.event_id,
-      data.keyword,
-      data.message,
-    ],
-  );
+      [
+        data.client_id,
+        data.hostname,
+        data.time_created,
+        data.level,
+        data.source,
+        data.event_source,
+        data.event_id,
+        data.keyword,
+        data.message,
+      ],
+    );
+  } catch (error) {
+    console.error("Fehler beim Erstellen der Logs:", error);
 
-  return result.rows[0];
+    // Return Error
+    throw new Error("Logs konnten nicht erstellt werden");
+  }
 };

@@ -8,7 +8,7 @@ exports.userLogin = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (error) {
-    console.error("Fehler beim Login:", error);
-    res.status(401).json({ message: error.message });
+    console.error(error.message);
+    res.status(401).json({ error: error.message });
   }
 };

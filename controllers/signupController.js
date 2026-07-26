@@ -1,4 +1,4 @@
-const service = require("../services/signup.services");
+const service = require("../services/signupService");
 
 exports.createUsers = async (req, res) => {
   try {
@@ -6,9 +6,9 @@ exports.createUsers = async (req, res) => {
     // DEBUG
     console.log("User created");
     res.status(201).json(user);
-  } catch (err) {
+  } catch (error) {
     // DEBUG
-    console.log(err.message);
-    res.status(500).json({ error: err.message });
+    console.log(error.message);
+    res.status(500).json({ error: error.message });
   }
 };

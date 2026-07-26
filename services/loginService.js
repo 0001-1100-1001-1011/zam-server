@@ -13,7 +13,7 @@ exports.login = async (username, password) => {
 
   // If user does not exist
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error("Authentication failed");
   }
 
   // Check password
@@ -25,7 +25,7 @@ exports.login = async (username, password) => {
 
   // Create JWT
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
   return token;
