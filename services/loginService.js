@@ -4,15 +4,16 @@ const jwt = require("jsonwebtoken");
 
 exports.login = async (username, password) => {
   // Search user in databse
-  const result = await db.query("SELECT * FROM admin_acc WHERE username = $1", [
-    username,
-  ]);
+  const result = await db.query(
+    "SELECT * FROM monitoring_users WHERE username = $1",
+    [username],
+  );
 
   const user = result.rows[0];
 
   // If user does not exist
   if (!user) {
-    throw new Error("User does not exist");
+    throw new Error("Authentication failed");
   }
 
   // Check password
@@ -24,7 +25,7 @@ exports.login = async (username, password) => {
 
   // Create JWT
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
   return token;
