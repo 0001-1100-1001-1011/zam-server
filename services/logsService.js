@@ -44,6 +44,15 @@ exports.postLogs = async (data) => {
         data.message,
       ],
     );
+
+    await db.query(
+      `
+      UPDATE windows_hosts
+      SET last_seen = NOW()
+      WHERE hostname = $1
+      `,
+      [data.hostname],
+    );
   } catch (error) {
     console.error("Fehler beim Erstellen der Logs:", error);
 
