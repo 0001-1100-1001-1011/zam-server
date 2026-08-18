@@ -36,8 +36,9 @@ exports.postCVEs = async (vulnerabilities) => {
     for (const vulnerability of vulnerabilities) {
       const cve = vulnerability.cve;
       const cve_id = cve.id;
-      const product = cve.affected[0].affectedData[0].product;
-      const description = cve.descriptions[0].value;
+      const product =
+        cve?.affected?.[0]?.affectedData?.[0]?.product ?? "Unknown";
+      const description = cve?.descriptions?.[0]?.value ?? "No description";
       const published_at = cve.published;
 
       await db.query(
