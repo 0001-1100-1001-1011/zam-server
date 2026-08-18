@@ -38,7 +38,6 @@ exports.postHosts = async (data) => {
         gpu_model         = EXCLUDED.gpu_model,
         storage_size      = EXCLUDED.storage_size,
         operating_system  = EXCLUDED.operating_system
-      RETURNING *
       `,
       [
         data.hostname,
