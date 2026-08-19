@@ -4,7 +4,9 @@ const db = require("../database/db");
 exports.getSoftwares = async () => {
   try {
     // Try to get all Softwares from the database
-    const result = await db.query(`SELECT * FROM windows_softwares`);
+    const result = await db.query(
+      `SELECT * FROM windows_softwares ORDER BY hostname ASC`,
+    );
     return result.rows;
   } catch (error) {
     console.error("Fehler beim Abrufen der Softwares:", error);
