@@ -2,7 +2,7 @@ const service = require("../services/logsService");
 
 exports.getLogs = async (req, res) => {
   try {
-    const logs = await service.getLogs();
+    const logs = await service.getLogs(req.query);
     res.status(200).json({ logs });
   } catch (error) {
     console.error("Fehler beim Abrufen der Logs:", error);
