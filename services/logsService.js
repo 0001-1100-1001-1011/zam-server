@@ -1,17 +1,51 @@
 // Handling for the data
 const db = require("../database/db");
 
-exports.getLogs = async () => {
+exports.getLogs = async (filters = {}) => {
   try {
-    // Try to get all logs from the database
-    const result = await db.query(
-      `SELECT * FROM windows_logs ORDER BY time_created DESC`,
-    );
+    const { source, level, clientId, search, limit = 100 } = filters;
+
+    const conditions = [];
+    const values = [];
+    let paramIndex = 1;
+
+    if (source) {
+      conditions.push(`source ILIKE $${paramIndex}`);
+      values.push(`%${source}%`);
+      paramIndex++;
+    }
+    if (level) {
+      conditions.push(`level = $${paramIndex}`);
+      values.push(level.toUpperCase());
+      paramIndex++;
+    }
+    if (clientId) {
+      conditions.push(`client_id = $${paramIndex}`);
+      values.push(clientId);
+      paramIndex++;
+    }
+    if (search) {
+      conditions.push(`message ILIKE $${paramIndex}`);
+      values.push(`%${search}%`);
+      paramIndex++;
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    values.push(Number(limit));
+    const limitClause = `LIMIT $${paramIndex}`;
+
+    const query = `
+      SELECT * FROM windows_logs
+      ${whereClause}
+      ORDER BY id DESC
+      ${limitClause}
+    `;
+
+    const result = await db.query(query, values);
     return result.rows;
   } catch (error) {
     console.error("Fehler beim Abrufen der Logs:", error);
-
-    // Return Error
     throw new Error("Logs konnten nicht geladen werden");
   }
 };
