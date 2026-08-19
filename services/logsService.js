@@ -30,7 +30,8 @@ exports.getLogs = async (filters = {}) => {
       paramIndex++;
     }
 
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const whereClause =
+      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     values.push(Number(limit));
     const limitClause = `LIMIT $${paramIndex}`;
@@ -38,7 +39,7 @@ exports.getLogs = async (filters = {}) => {
     const query = `
       SELECT * FROM windows_logs
       ${whereClause}
-      ORDER BY id DESC
+      ORDER BY time_created DESC
       ${limitClause}
     `;
 
