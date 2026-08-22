@@ -26,7 +26,7 @@ exports.createUser = async (data) => {
         `,
         [data.username, data.email, derivedKey.toString("hex"), password_salt.toString("hex")],
       );
-      console.log("New user: '" + username + "', ", result);
+      console.log("New user: '" + data.username + "', ", result);
     } catch (error) {
       console.error("Fehler beim Erstellen des Users:", error);
 
