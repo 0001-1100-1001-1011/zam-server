@@ -1,32 +1,48 @@
 const db = require("../database/db");
-const bcrypt = require("bcrypt");
+const { argon2, timingSafeEqual } = require("node:crypto");
 const jwt = require("jsonwebtoken");
 
-exports.login = async (username, password) => {
-  // Search user in databse
-  const result = await db.query(
-    "SELECT * FROM monitoring_users WHERE username = $1",
-    [username],
-  );
+exports.login = async (data) => {
+  const result = await db.query("SELECT * FROM monitoring_users WHERE username = $1", [
+    data.username,
+  ]);
 
   const user = result.rows[0];
 
-  // If user does not exist
   if (!user) {
     throw new Error("Authentication failed");
   }
 
-  // Check password
-  const compareHash = await bcrypt.compare(password, user.password_hash);
+  const argonParameters = {
+    message: data.password,
+    nonce: Buffer.from(user.password_salt, "hex"),
+    parallelism: 4,
+    tagLength: 64,
+    memory: 65536,
+    passes: 3,
+  };
 
-  if (!compareHash) {
+  const derivedKey = await new Promise((resolve, reject) => {
+    argon2("argon2id", argonParameters, (err, derivedKey) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(derivedKey);
+      }
+    });
+  });
+
+  const storedHash = Buffer.from(user.password_hash, "hex");
+
+  if (!timingSafeEqual(derivedKey, storedHash)) {
     throw new Error("Authentication failed");
   }
 
-  // Create JWT
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+  //const compareHash = await bcrypt.compare(password, user.password_hash);
 
-  return token;
+  //const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+  //  expiresIn: process.env.JWT_EXPIRES_IN,
+  //});
+
+  return "yes";
 };
