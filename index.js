@@ -19,7 +19,7 @@ app.use(
 );
 
 // Routes
-app.use("/auth", require("./routes/signupRoutes"));
+app.use("/auth", require("./routes/registerRoutes"));
 app.use("/auth", require("./routes/loginRoutes"));
 app.use("/api", require("./routes/logsRoutes"));
 app.use("/api", require("./routes/hostsRoutes"));
