@@ -22,7 +22,7 @@ exports.createUser = async (data) => {
       const result = await db.query(
         `INSERT INTO monitoring_users 
         (username, email, password_hash, password_salt)
-        VALUES ($1, $2, $3, $5)
+        VALUES ($1, $2, $3, $4)
         `,
         [data.username, data.email, derivedKey.toString("hex"), password_salt.toString("hex")],
       );
