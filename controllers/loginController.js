@@ -1,10 +1,8 @@
 const service = require("../services/loginService");
 
 exports.userLogin = async (req, res) => {
-  console.log(req.body);
   try {
-    const { username, password } = req.body;
-    const token = await service.login(username, password);
+    const token = await service.login(req.body);
 
     res.status(200).json({ token });
   } catch (error) {
