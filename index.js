@@ -1,14 +1,28 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import cookierParser from "cookie-parser";
+import express from "express";
+import cors from "cors";
 
-const express = require("express");
-const cors = require("cors");
+//routefiles
+import registerRoute from "./routes/registerRoutes.js";
+import loginRoute from "./routes/loginRoutes.js";
+import logRoute from "./routes/logsRoutes.js";
+import hostRoute from "./routes/hostsRoutes.js";
+import cveRoute from "./routes/cveRoutes.js";
+import softwareRoute from "./routes/softwaresRoutes.js";
 
-require("./cronjob/dailyCVE");
+import authenticateToken from "./middleware/authenticationService.js";
+
+import "./cronjob/dailyCVE.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+
+app.use(cookierParser());
 
 app.use(
   express.json({
@@ -19,12 +33,15 @@ app.use(
 );
 
 // Routes
-app.use("/auth", require("./routes/registerRoutes"));
-app.use("/auth", require("./routes/loginRoutes"));
-app.use("/api", require("./routes/logsRoutes"));
-app.use("/api", require("./routes/hostsRoutes"));
-app.use("/api", require("./routes/softwaresRoutes"));
-app.use("/api", require("./routes/cveRoutes"));
+app.use("/auth", registerRoute);
+app.use("/auth", loginRoute);
+
+app.use("/api", authenticateToken);
+
+app.use("/api", logRoute);
+app.use("/api", hostRoute);
+app.use("/api", softwareRoute);
+app.use("/api", cveRoute);
 
 app.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);

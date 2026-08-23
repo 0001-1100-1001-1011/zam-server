@@ -1,8 +1,9 @@
-const router = require("express").Router();
-const controller = require("../controllers/cveController");
+import express from "express";
+import { getCVEs, getLastCVEs } from "../controllers/cveController.js";
 
-// get CVEs
-router.get("/cves", controller.getCVEs);
-router.get("/cves/last", controller.getLastCVEs);
+const router = express.Router();
 
-module.exports = router;
+router.get("/cves", getCVEs);
+router.get("/cves/last", getLastCVEs);
+
+export default router;

@@ -1,7 +1,7 @@
-const db = require("../database/db");
-const { argon2, randomBytes } = require("node:crypto");
+import db from "../database/db.js";
+import { argon2, randomBytes } from "node:crypto";
 
-exports.createUser = async (data) => {
+export async function createUser(data) {
   const password_salt = randomBytes(16);
 
   const argonParameters = {
@@ -33,4 +33,4 @@ exports.createUser = async (data) => {
       throw new Error("User konnten nicht erstellt werden");
     }
   });
-};
+}

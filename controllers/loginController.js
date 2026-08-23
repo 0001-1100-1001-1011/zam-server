@@ -1,12 +1,14 @@
-const service = require("../services/loginService");
+import { loginService, createAcessToken } from "../services/loginService.js";
 
-exports.userLogin = async (req, res) => {
+export async function userLogin(req, res) {
   try {
-    const token = await service.login(req.body);
+    const user = await loginService(req.body);
 
-    res.status(200).json({ token });
+    const accessToken = await createAcessToken(user);
+
+    res.status(200).json({ accessToken: accessToken });
   } catch (error) {
     console.error(error.message);
     res.status(401).json({ error: error.message });
   }
-};
+}
