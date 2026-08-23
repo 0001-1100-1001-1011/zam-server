@@ -1,8 +1,8 @@
-const db = require("../database/db");
-const { argon2, timingSafeEqual } = require("node:crypto");
-const jwt = require("jsonwebtoken");
+import db from "../database/db.js";
+import { argon2, timingSafeEqual } from "node:crypto";
+import jwt from "jsonwebtoken";
 
-exports.login = async (data) => {
+export async function loginService(data) {
   const result = await db.query("SELECT * FROM monitoring_users WHERE username = $1", [
     data.username,
   ]);
@@ -36,13 +36,16 @@ exports.login = async (data) => {
 
   if (!timingSafeEqual(derivedKey, storedHash)) {
     throw new Error("Authentication failed");
+  } else {
+    return user;
   }
+}
 
-  //const compareHash = await bcrypt.compare(password, user.password_hash);
-
-  //const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-  //  expiresIn: process.env.JWT_EXPIRES_IN,
-  //});
-
-  return "yes";
-};
+export async function createAcessToken(user) {
+  try {
+    const accessToken = jwt.sign(user.username, process.env.ACCESS_TOKEN_SECRET);
+    return accessToken;
+  } catch (error) {
+    throw new Error("Failed to create Access-Token");
+  }
+}
