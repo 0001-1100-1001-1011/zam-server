@@ -41,11 +41,34 @@ export async function loginService(data) {
   }
 }
 
-export async function createAcessToken(user) {
+export async function createAccessToken(user) {
   try {
-    const accessToken = jwt.sign(user.username, process.env.ACCESS_TOKEN_SECRET);
+    const accessToken = jwt.sign(
+      { sub: user.username, type: "access" },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        algorithm: "HS256",
+        expiresIn: process.env.ACCESS_TOKEN_EXPIRATION,
+      },
+    );
     return accessToken;
   } catch (error) {
     throw new Error("Failed to create Access-Token");
+  }
+}
+
+export async function createRefreshToken(user) {
+  try {
+    const refreshToken = jwt.sign(
+      { sub: user.username, type: "refresh" },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        algorithm: "HS256",
+        expiresIn: REFRESH_TOKEN_EXPIRATION,
+      },
+    );
+    return refreshToken;
+  } catch (error) {
+    throw new Error("Failed to create Refresh-Token");
   }
 }
