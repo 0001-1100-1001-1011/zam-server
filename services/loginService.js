@@ -64,11 +64,12 @@ export async function createRefreshToken(user) {
       process.env.REFRESH_TOKEN_SECRET,
       {
         algorithm: "HS256",
-        expiresIn: REFRESH_TOKEN_EXPIRATION,
+        expiresIn: process.env.REFRESH_TOKEN_EXPIRATION,
       },
     );
     return refreshToken;
   } catch (error) {
+    console.error(error);
     throw new Error("Failed to create Refresh-Token");
   }
 }
