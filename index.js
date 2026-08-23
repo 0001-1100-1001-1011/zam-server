@@ -6,6 +6,7 @@ import cors from "cors";
 //routefiles
 import registerRoute from "./routes/registerRoutes.js";
 import loginRoute from "./routes/loginRoutes.js";
+import refreshRoute from "./routes/refreshRoute.js";
 import logRoute from "./routes/logsRoutes.js";
 import hostRoute from "./routes/hostsRoutes.js";
 import cveRoute from "./routes/cveRoutes.js";
@@ -35,6 +36,7 @@ app.use(
 // Routes
 app.use("/auth", registerRoute);
 app.use("/auth", loginRoute);
+app.use("/auth", refreshRoute);
 
 app.use("/api", authenticateToken);
 
