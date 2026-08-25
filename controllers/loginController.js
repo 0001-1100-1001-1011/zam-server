@@ -13,7 +13,7 @@ export async function userLogin(req, res) {
         secure: false, // muss bei umstieg auf HTTPS auf true gesetzt werden!
         sameSite: "lax", // kann mit proxy eig auf "strict" gesetzt werden für maximale cross-site-request-forgery protection
         path: "/auth/refresh",
-        maxAge: 60 * 60 * 24 * 30, // in Sekunden, auf 30 Tage
+        maxAge: 60 * 60 * 24 * 30 * 1000, // in Millisekunden, auf 30 Tage
       })
       .status(200)
       .json({ accessToken: accessToken });
