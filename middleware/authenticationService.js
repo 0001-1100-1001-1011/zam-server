@@ -9,7 +9,12 @@ export default function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, { algorithms: ["HS256"] }, (err, payload) => {
     if (err) return res.status(401).json({ error: "Token invalid" });
-    req.user = payload;
+    payload.type == "access"
+      ? next()
+      : payload.type == "refresh" // replay attack? FE should never send this here
+        ? res.status(401).json({ error: "Token invalid" })
+        : res.status(401).json({ error: "Token invalid" });
+    req.payload = payload;
     next();
   });
 }
