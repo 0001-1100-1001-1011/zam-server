@@ -26,7 +26,7 @@ export async function loginService(data) {
   const derivedKey = await new Promise((resolve, reject) => {
     argon2("argon2id", argonParameters, (err, derivedKey) => {
       if (err) {
-        reject(err);
+        return reject(err);
       } else {
         resolve(derivedKey);
       }

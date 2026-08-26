@@ -13,21 +13,25 @@ export async function createUser(data) {
     passes: 3,
   };
 
-  await new Promise(resolve, (reject) => {
+  return new Promise(resolve, (reject) => {
     argon2("argon2id", argonParameters, async (err, derivedKey) => {
       if (err) {
-        reject(err);
+        return reject(err);
       }
 
-      const result = await db.query(
-        `INSERT INTO monitoring_users 
-        (username, email, password_hash, password_salt)
-        VALUES ($1, $2, $3, $4)
-        `,
-        [data.username, data.email, derivedKey.toString("hex"), password_salt.toString("hex")],
-      );
-      console.log("New user: '" + data.username + "', ", result);
+      try {
+        const result = await db.query(
+          `INSERT INTO monitoring_users 
+          (username, email, password_hash, password_salt)
+          VALUES ($1, $2, $3, $4)
+          `,
+          [data.username, data.email, derivedKey.toString("hex"), password_salt.toString("hex")],
+        );
+        console.log("New user: '" + data.username + "', ", result);
+        resolve(true);
+      } catch (error) {
+        reject(error);
+      }
     });
-    resolve(true);
   });
 }
