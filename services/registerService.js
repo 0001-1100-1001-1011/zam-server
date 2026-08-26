@@ -13,12 +13,12 @@ export async function createUser(data) {
     passes: 3,
   };
 
-  argon2("argon2id", argonParameters, async (err, derivedKey) => {
-    if (err) {
-      throw err;
-    }
+  await new Promise(resolve, (reject) => {
+    argon2("argon2id", argonParameters, async (err, derivedKey) => {
+      if (err) {
+        reject(err);
+      }
 
-    try {
       const result = await db.query(
         `INSERT INTO monitoring_users 
         (username, email, password_hash, password_salt)
@@ -27,10 +27,7 @@ export async function createUser(data) {
         [data.username, data.email, derivedKey.toString("hex"), password_salt.toString("hex")],
       );
       console.log("New user: '" + data.username + "', ", result);
-    } catch (error) {
-      console.error("Fehler beim Erstellen des Users:", error);
-
-      throw new Error("User konnten nicht erstellt werden");
-    }
+    });
+    resolve(true);
   });
 }
