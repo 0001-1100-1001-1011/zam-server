@@ -1,12 +1,9 @@
-// Handling for the data
-const db = require("../database/db");
+import db from "../database/db.js";
 
-exports.getHosts = async () => {
+export async function getHostsService() {
   try {
     // Try to get all hosts from the database
-    const result = await db.query(
-      `SELECT * FROM windows_hosts ORDER BY last_seen DESC `,
-    );
+    const result = await db.query(`SELECT * FROM windows_hosts ORDER BY last_seen DESC `);
     return result.rows;
   } catch (error) {
     console.error("Fehler beim Abrufen der Hosts:", error);
@@ -14,11 +11,12 @@ exports.getHosts = async () => {
     // Return Error
     throw new Error("Hosts konnten nicht geladen werden");
   }
-};
+}
 
-exports.postHosts = async (data) => {
-  console.log("HMAC KEY:", data.hmac_key); 
-    const key = process.env.PG_ENCRYPTION_KEY;
+
+export async function postHostsService(data) {
+  const key = process.env.PG_ENCRYPTION_KEY;
+
   try {
     const result = await db.query(
       ` 
@@ -63,4 +61,4 @@ exports.postHosts = async (data) => {
     console.error("Fehler beim Erstellen des Hosts:", error);
     throw new Error("Host konnte nicht erstellt werden");
   }
-};
+}

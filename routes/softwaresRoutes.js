@@ -1,8 +1,10 @@
-const router = require("express").Router();
-const controller = require("../controllers/softwaresController");
+import express from "express";
+import { getSoftware, postSoftware } from "../controllers/softwaresController.js";
+
+const router = express.Router();
 
 // get Softwares
-router.get("/softwares", controller.getSoftwares);
-router.post("/softwares", controller.postSoftwares);
+router.get("/softwares", getSoftware);
+router.post("/softwares", postSoftware);
 
-module.exports = router;
+export default router;

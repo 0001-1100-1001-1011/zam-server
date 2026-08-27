@@ -1,8 +1,9 @@
-const router = require("express").Router();
-const controller = require("../controllers/hostsController");
+import express from "express";
+import { getHosts, postHosts } from "../controllers/hostsController.js";
 
-// get hosts
-router.get("/hosts", controller.getHosts);
-router.post("/hosts", controller.postHosts);
+const router = express.Router();
 
-module.exports = router;
+router.get("/hosts", getHosts);
+router.post("/hosts", postHosts);
+
+export default router;

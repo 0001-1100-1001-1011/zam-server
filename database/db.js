@@ -1,5 +1,6 @@
-// Load .env
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 console.log("DB Config used:");
 console.log("DB_HOST:", process.env.DB_HOST);
@@ -7,7 +8,7 @@ console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_NAME:", process.env.DB_NAME);
 
 // Import pool for postgres
-const { Pool } = require("pg");
+import { Pool } from "pg";
 
 // Create pool for multiple connections with credentials
 const pool = new Pool({
@@ -18,4 +19,4 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
-module.exports = pool;
+export default pool;

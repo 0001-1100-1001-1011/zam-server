@@ -1,24 +1,22 @@
-const service = require("../services/softwaresService");
+import { getSoftwareService, postSoftwareService } from "../services/softwaresService.js";
 
-exports.getSoftwares = async (req, res) => {
+export async function getSoftware(req, res) {
   try {
-    const softwares = await service.getSoftwares();
+    const softwares = await getSoftwareService();
     res.status(200).json(softwares);
   } catch (error) {
     console.error("Fehler beim Abrufen der Softwares:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}
 
-exports.postSoftwares = async (req, res) => {
+export async function postSoftware(req, res) {
   try {
-    const softwares = await service.postSoftwares(req.body);
-    // DEBUG
+    await postSoftwareService(req.body);
     console.log("Softwares created");
     res.status(201).json({ message: "created" });
   } catch (error) {
-    // DEBUG
     console.log(error.message);
     res.status(500).json({ error: error.message });
   }
-};
+}
