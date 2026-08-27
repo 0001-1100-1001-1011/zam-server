@@ -13,7 +13,7 @@ export async function createUser(data) {
     passes: 3,
   };
 
-  return new Promise(resolve, (reject) => {
+  return new Promise((resolve, reject) => {
     argon2("argon2id", argonParameters, async (err, derivedKey) => {
       if (err) {
         return reject(err);
