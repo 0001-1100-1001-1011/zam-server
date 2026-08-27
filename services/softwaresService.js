@@ -1,12 +1,9 @@
-// Handling for the data
-const db = require("../database/db");
+import db from "../database/db.js";
 
-exports.getSoftwares = async () => {
+export async function getSoftwareService() {
   try {
     // Try to get all Softwares from the database
-    const result = await db.query(
-      `SELECT * FROM windows_softwares ORDER BY hostname ASC`,
-    );
+    const result = await db.query(`SELECT * FROM windows_softwares ORDER BY hostname ASC`);
     return result.rows;
   } catch (error) {
     console.error("Fehler beim Abrufen der Softwares:", error);
@@ -14,9 +11,9 @@ exports.getSoftwares = async () => {
     // Return Error
     throw new Error("Softwares konnten nicht geladen werden");
   }
-};
+}
 
-exports.postSoftwares = async (data) => {
+export async function postSoftwareService(data) {
   try {
     const result = await db.query(
       `
@@ -36,4 +33,4 @@ exports.postSoftwares = async (data) => {
     // Return Error
     throw new Error("Softwares konnten nicht erstellt werden");
   }
-};
+}

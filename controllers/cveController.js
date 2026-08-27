@@ -1,21 +1,21 @@
-const service = require("../services/cveService");
+import { getCVEsService, getLastCVEsService } from "../services/cveService.js";
 
-exports.getCVEs = async (req, res) => {
+export async function getCVEs(req, res) {
   try {
-    const cves = await service.getCVEs();
+    const cves = await getCVEsService();
     res.status(200).json(cves);
   } catch (error) {
     console.error("Fehler beim Abrufen der CVEs:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}
 
-exports.getLastCVEs = async (req, res) => {
+export async function getLastCVEs(req, res) {
   try {
-    const cves = await service.getLastCVEs();
+    const cves = await getLastCVEsService();
     res.status(200).json(cves);
   } catch (error) {
     console.error("Fehler beim Abrufen der CVEs:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-};
+}

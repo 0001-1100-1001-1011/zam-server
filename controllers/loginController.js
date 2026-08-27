@@ -1,14 +1,24 @@
-const service = require("../services/loginService");
+import { loginService, createAccessToken, createRefreshToken } from "../services/loginService.js";
 
-exports.userLogin = async (req, res) => {
-  console.log(req.body);
+export async function userLogin(req, res) {
   try {
-    const { username, password } = req.body;
-    const token = await service.login(username, password);
+    const user = await loginService(req.body);
 
-    res.status(200).json({ token });
+    const accessToken = await createAccessToken(user);
+    const refreshToken = await createRefreshToken(user);
+
+    res
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false, // muss bei umstieg auf HTTPS auf true gesetzt werden!
+        sameSite: "lax", // kann mit proxy eig auf "strict" gesetzt werden für maximale cross-site-request-forgery protection
+        path: "/auth/refresh",
+        maxAge: 60 * 60 * 24 * 30 * 1000, // in Millisekunden, auf 30 Tage
+      })
+      .status(200)
+      .json({ accessToken: accessToken });
   } catch (error) {
     console.error(error.message);
     res.status(401).json({ error: error.message });
   }
-};
+}

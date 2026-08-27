@@ -1,6 +1,6 @@
-const db = require("../database/db");
+import db from "../database/db.js";
 
-exports.fetchLatestCVEs = async () => {
+export async function fetchLatestCVEs() {
   try {
     const startDate = new Date(Date.now() - 86400000);
     const endDate = new Date();
@@ -12,9 +12,7 @@ exports.fetchLatestCVEs = async () => {
       resultsPerPage: "100",
     });
 
-    const response = await fetch(
-      `https://services.nvd.nist.gov/rest/json/cves/2.0?${params}`,
-    );
+    const response = await fetch(`https://services.nvd.nist.gov/rest/json/cves/2.0?${params}`);
 
     if (!response.ok) {
       throw new Error("Ungültige Antwort erhalten.");
@@ -29,15 +27,14 @@ exports.fetchLatestCVEs = async () => {
     // Return Error
     throw new Error("CVEs konnten nicht geladen werden");
   }
-};
+}
 
-exports.postCVEs = async (vulnerabilities) => {
+export async function postCVEs(vulnerabilities) {
   try {
     for (const vulnerability of vulnerabilities) {
       const cve = vulnerability.cve;
       const cve_id = cve.id;
-      const product =
-        cve?.affected?.[0]?.affectedData?.[0]?.product ?? "Unknown";
+      const product = cve?.affected?.[0]?.affectedData?.[0]?.product ?? "Unknown";
       const description = cve?.descriptions?.[0]?.value ?? "No description";
       const published_at = cve.published;
 
@@ -61,4 +58,4 @@ exports.postCVEs = async (vulnerabilities) => {
     // Return Error
     throw new Error("CVEs konnten nicht geladen werden");
   }
-};
+}

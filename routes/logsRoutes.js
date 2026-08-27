@@ -1,9 +1,10 @@
-const router = require("express").Router();
-const controller = require("../controllers/logsController");
-const hmac = require("../middleware/hmac");
+import express from "express";
+import hmac from "../middleware/hmac.js";
+import { getLogs, postLogs } from "../controllers/logsController.js";
 
-// get logs
-router.get("/logs", controller.getLogs);
-router.post("/logs", hmac, controller.postLogs);
+const router = express.Router();
 
-module.exports = router;
+router.get("/logs", getLogs);
+router.post("/logs", hmac, postLogs);
+
+export default router;

@@ -1,7 +1,6 @@
-// Handling for the data
-const db = require("../database/db");
+import db from "../database/db.js";
 
-exports.getLogs = async (filters = {}) => {
+export async function getLogsService(filters = {}) {
   try {
     const { source, level, clientId, search, limit = 100 } = filters;
 
@@ -30,8 +29,7 @@ exports.getLogs = async (filters = {}) => {
       paramIndex++;
     }
 
-    const whereClause =
-      conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
     values.push(Number(limit));
     const limitClause = `LIMIT $${paramIndex}`;
@@ -49,9 +47,9 @@ exports.getLogs = async (filters = {}) => {
     console.error("Fehler beim Abrufen der Logs:", error);
     throw new Error("Logs konnten nicht geladen werden");
   }
-};
+}
 
-exports.postLogs = async (data) => {
+export async function postLogsService(data) {
   try {
     const result = await db.query(
       `
@@ -96,4 +94,4 @@ exports.postLogs = async (data) => {
     // Return Error
     throw new Error("Logs konnten nicht erstellt werden");
   }
-};
+}
