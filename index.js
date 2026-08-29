@@ -46,7 +46,7 @@ app.use(
 // Routes
 app.use("/auth", registerRoute);
 app.use("/auth", noCache, loginRoute);
-app.use("/auth", noCache, refreshRoute);
+
 
 //Agent-Routes
 app.use("/agent-api", agentLogsRoutes);
@@ -55,6 +55,7 @@ app.use("/agent-api", agentSoftwareRoutes);
 
 //Protected Routes
 app.use("/api", authenticateToken);
+app.use("/auth", noCache, refreshRoute);
 app.use("/api", logRoute);
 app.use("/api", hostRoute);
 app.use("/api", softwareRoute);
