@@ -6,6 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+tests/
+tests
+*.test.js
+
 *.cert
 *.pem
 *.crt
