@@ -17,7 +17,6 @@ import agentLogsRoutes from "./routes/agentLogsRoutes.js";
 import agentHostsRoutes from "./routes/agentHostsRoutes.js";
 import agentSoftwareRoutes from "./routes/agentSoftwaresRoutes.js";
 
-
 import authenticateToken from "./middleware/authenticationService.js";
 import { noCache } from "./middleware/noCache.js";
 
@@ -46,7 +45,7 @@ app.use(
 // Routes
 app.use("/auth", registerRoute);
 app.use("/auth", noCache, loginRoute);
-
+app.use("/auth", noCache, refreshRoute);
 
 //Agent-Routes
 app.use("/agent-api", agentLogsRoutes);
@@ -55,11 +54,10 @@ app.use("/agent-api", agentSoftwareRoutes);
 
 //Protected Routes
 app.use("/api", authenticateToken);
-app.use("/auth", noCache, refreshRoute);
-app.use("/api", logRoute);
-app.use("/api", hostRoute);
-app.use("/api", softwareRoute);
-app.use("/api", cveRoute);
+app.use("/api", noCache, logRoute);
+app.use("/api", noCache, hostRoute);
+app.use("/api", noCache, softwareRoute);
+app.use("/api", noCache, cveRoute);
 
 app.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
