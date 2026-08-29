@@ -3,7 +3,7 @@ import { z } from "zod";
 export const agentHostsSchema = z.object({
   hostname: z.string().min(1).max(255),
   ip_address: z.ipv4(),
-  cpu_model: z.string().min(1).max(255),
+  cpu_model: z.string().max(255).optional(),
   ram_size: z.number().nonnegative().lte(10000),
   gpu_model: z.string().min(1).max(255),
   storage_size: z.number().nonnegative().lte(10000),
@@ -19,14 +19,18 @@ export const agentLogsSchema = z.object({
   source: z.string().min(1).max(255),
   event_source: z.string().min(1).max(255),
   event_id: z.number().nonnegative().lte(66000),
-  keyword: z.string().min(1).max(255),
+  keyword: z.string().max(255),
   message: z.string().min(1),
+});
+
+const softwareSchema = z.object({
+  name: z.string().min(1).max(255),
+  version: z.string().min(1).max(255),
 });
 
 export const agentSoftwaresSchema = z.object({
   hostname: z.string().min(1).max(255),
-  software_name: z.string().min(1).max(255),
-  software_version: z.string().max(255),
+  software: z.array(softwareSchema),
 });
 
 export const monitoringUserRegisterSchema = z.object({
