@@ -11,7 +11,7 @@ export const agentHostsSchema = z.object({
   hmac_key_encrypted: z.string().min(1).max(255),
 });
 
-export const agentLogssSchema = z.object({
+export const agentLogsSchema = z.object({
   client_id: z.string(),
   hostname: z.string().min(1).max(255),
   time_created: z.string(),

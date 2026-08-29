@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-export async function inputValidation(schema) {
-  return async (req, res, next) => {
+export function inputValidation(schema) {
+  return (req, res, next) => {
     try {
-      const result = await schema.parseAsync(req.body);
-      req.body = result.data;
+      const result = schema.parse(req.body);
+      req.body = result;
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
