@@ -1,8 +1,12 @@
 import db from "../database/db.js";
 
 export async function postAgentLogsService(data) {
+  const dbClient = await db.connect();
+
   try {
-    const result = await db.query(
+    await dbClient.query("BEGIN");
+
+    await dbClient.query(
       `
     INSERT INTO windows_logs
     (
@@ -31,7 +35,7 @@ export async function postAgentLogsService(data) {
       ],
     );
 
-    await db.query(
+    await dbClient.query(
       `
       UPDATE windows_hosts
       SET last_seen = NOW()
@@ -39,11 +43,11 @@ export async function postAgentLogsService(data) {
       `,
       [data.hostname],
     );
-    return result.rows[0];
+    await dbClient.query("COMMIT");
   } catch (error) {
-    console.error("Fehler beim Erstellen der Logs:", error);
-
-    // Return Error
+    await dbClient.query("ROLLBACK");
     throw new Error("Logs konnten nicht erstellt werden");
+  } finally {
+    dbClient.release();
   }
 }

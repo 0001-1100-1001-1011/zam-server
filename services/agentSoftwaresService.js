@@ -1,15 +1,17 @@
 import db from "../database/db.js";
 
 export async function postAgentSoftwareService(data) {
-  try {
-    for (const s of data.software) {
+  const dbClient = await db.connect();
 
+  try {
+    await dbClient.query("BEGIN");
+    for (const s of data.software) {
       const name = s.name?.trim();
       if (!name) continue;
 
       const version = s.version?.trim() || "unknown";
 
-      await db.query(
+      await dbClient.query(
         `
         INSERT INTO windows_softwares(
         hostname, 
@@ -26,12 +28,14 @@ export async function postAgentSoftwareService(data) {
           software_version = EXCLUDED.software_version,
           last_seen = NOW()
         `,
-        [data.hostname, name, version]
+        [data.hostname, name, version],
       );
     }
+    await dbClient.query("COMMIT");
   } catch (error) {
-    console.error("Fehler beim Erstellen der Softwares:", error);
+    await dbClient.query("ROLLBACK");
     throw new Error("Softwares konnten nicht erstellt werden");
+  } finally {
+    dbClient.release();
   }
 }
-

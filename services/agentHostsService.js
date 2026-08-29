@@ -4,7 +4,7 @@ export async function postAgentHostsService(data) {
   const key = process.env.PG_ENCRYPTION_KEY;
 
   try {
-    const result = await db.query(
+    await db.query(
       ` 
       INSERT INTO windows_hosts
       (
@@ -39,12 +39,10 @@ export async function postAgentHostsService(data) {
         data.storage_size,
         data.operating_system,
         data.hmac_key,
-        key
+        key,
       ],
     );
-    return result.rows[0];
   } catch (error) {
-    console.error("Fehler beim Erstellen des Hosts:", error);
     throw new Error("Host konnte nicht erstellt werden");
   }
 }
