@@ -5,6 +5,8 @@ import cors from "cors";
 
 dotenv.config();
 
+import { limiter } from "./configs/limiter.js";
+
 //routefiles
 import registerRoute from "./routes/registerRoutes.js";
 import loginRoute from "./routes/loginRoutes.js";
@@ -33,6 +35,8 @@ app.use(
 );
 
 app.use(cookieParser());
+
+app.use(limiter);
 
 app.use(
   express.json({
