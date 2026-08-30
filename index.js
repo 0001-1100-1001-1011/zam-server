@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 
 dotenv.config();
 
@@ -26,6 +27,20 @@ import "./cronjob/dailyCVE.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", "http://localhost:3000"],
+      },
+    },
+  }),
+);
 
 app.use(
   cors({
