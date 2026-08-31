@@ -20,7 +20,7 @@ export const agentLogsSchema = z.object({
   event_source: z.string().min(1).max(255),
   event_id: z.number().nonnegative().lte(66000),
   keyword: z.string(),
-  message: z.string().min(1),
+  message: z.string(),
 });
 
 export const agentSoftwaresSchema = z.object({
